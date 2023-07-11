@@ -1,0 +1,105 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+
+android {
+    signingConfigs {
+        debug {
+            storeFile rootProject.file("signing.jks")
+            keyAlias 'sora'
+            keyPassword '1145141919'
+            storePassword '1145141919'
+
+            enableV1Signing true
+            enableV2Signing true
+            enableV3Signing true
+            enableV4Signing false
+        }
+    }
+    namespace 'dev.sora.protohax'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "dev.sora.protohax"
+        minSdk 28
+        targetSdk 34
+        versionCode 1
+        versionName "1.3.2"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+
+        ndk {
+            abiFilters 'arm64-v8a', 'x86_64'
+        }
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_compiler_version
+    }
+    buildTypes {
+        release {
+            shrinkResources false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.getByName('debug')
+            firebaseCrashlytics {
+                mappingFileUploadEnabled false
+
+            }
+        }
+    }
+    compileOptions {
+        sourceCompatibility '11'
+        targetCompatibility '11'
+    }
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/**'
+            excludes += '/kotlin/**'
+            excludes += '/DebugProbesKt.bin'
+            excludes += '/kotlin-tooling-metadata.json'
+        }
+        jniLibs.useLegacyPackaging true
+    }
+    configurations {
+        all {
+            resolutionStrategy {
+                // exclude duplicate classes
+                exclude group: 'com.google.guava', module: 'listenablefuture'
+                exclude group: 'com.google.errorprone', module: 'error_prone_annotations'
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'dev.sora.relay:ProtoHax:1.3.2'
+    implementation 'dev.sora.networking:libmitm:1.2.3-raknet'
+
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation "androidx.compose.material3:material3:$compose_material_version"
+    implementation "androidx.compose.material3:material3-window-size-class:$compose_material_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation 'androidx.navigation:navigation-compose:2.6.0'
+
+    implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-adaptive:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-drawablepainter:$accompanist_version"
+
+    implementation 'com.google.firebase:firebase-crashlytics:18.3.7'
+    implementation 'com.google.firebase:firebase-analytics:21.3.0'
+}

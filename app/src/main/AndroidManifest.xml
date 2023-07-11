@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:name="dev.sora.protohax.MyApplication"
+        android:theme="@style/Theme.ProtoHax"
+        android:enableOnBackInvokedCallback="true"
+        tools:targetApi="34">
+
+        <activity
+            android:name="dev.sora.protohax.ui.activities.MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.ProtoHax">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="dev.sora.protohax.ui.activities.MicrosoftLoginActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ProtoHax">
+        </activity>
+        <activity
+            android:name="dev.sora.protohax.ui.activities.AppPickerActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ProtoHax">
+        </activity>
+        <activity
+            android:name="dev.sora.protohax.ui.activities.LogActivity"
+            android:exported="false"
+            android:theme="@style/Theme.ProtoHax">
+        </activity>
+
+        <service android:name="dev.sora.protohax.relay.service.AppService"
+            android:permission="android.permission.BIND_VPN_SERVICE"
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+            <property android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE" android:value="ProtoHax Proxy"/>
+            <intent-filter>
+                <action android:name="android.net.VpnService" />
+                <action android:name="dev.sora.libmitm.vpn.start"/>
+                <action android:name="dev.sora.libmitm.vpn.stop"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="dev.sora.protohax"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notification_icon" />
+    </application>
+
+</manifest>
